@@ -1,0 +1,218 @@
+/*!
+Theme Name: Portal Craca
+Theme URI: https://seusite.com.br
+Author: Gustavo
+Author URI: https://seusite.com.br
+Description: Tema customizado de alta performance para portal de notícias.
+Version: 1.0.0
+Text Domain: portal-craca
+*/
+
+/* ========================================
+   FONTS
+   ======================================== */
+
+/* SquidBoy Regular */
+@font-face {
+  font-family: 'SquidBoy';
+  src: url('assets/fonts/SquidBoy.woff2') format('woff2'),
+       url('assets/fonts/SquidBoy.woff') format('woff'),
+       url('assets/fonts/SquidBoy.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* SquidBoy Bold */
+@font-face {
+  font-family: 'SquidBoy Bold';
+  src: url('assets/fonts/SquidBoy-Bold.woff2') format('woff2'),
+       url('assets/fonts/SquidBoy-Bold.woff') format('woff'),
+       url('assets/fonts/SquidBoy-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* SquidBoy Thin */
+@font-face {
+  font-family: 'SquidBoy Thin';
+  src: url('assets/fonts/SquidBoy-Thin.woff2') format('woff2'),
+       url('assets/fonts/SquidBoy-Thin.woff') format('woff'),
+       url('assets/fonts/SquidBoy-Thin.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Anaktoria */
+@font-face {
+  font-family: 'Anaktoria';
+  src: url('assets/fonts/Anaktoria.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================================
+   BASE LAYER — Global defaults
+   ======================================== */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-craca-cream text-craca-dark font-body antialiased;
+  }
+
+  /* Restore list styles inside prose */
+  .prose ul { list-style-type: disc; }
+  .prose ol { list-style-type: decimal; }
+}
+
+/* ========================================
+   COMPONENT LAYER — Reusable UI patterns
+   ======================================== */
+
+@layer components {
+  /* ------------------------------------
+     Category Color Badge
+     ------------------------------------ */
+  .cat-badge {
+    @apply inline-block text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-sm;
+  }
+
+  .cat-badge--documentarios { @apply bg-cat-documentarios text-craca-dark; }
+  .cat-badge--cidade         { @apply bg-cat-cidade text-craca-dark; }
+  .cat-badge--entretenimento { @apply bg-cat-entretenimento text-craca-dark; }
+  .cat-badge--esportes       { @apply bg-cat-esportes text-craca-dark; }
+  .cat-badge--denuncia       { @apply bg-cat-denuncia text-white; }
+  .cat-badge--coisas         { @apply bg-cat-coisas text-craca-dark; }
+  .cat-badge--politica       { @apply bg-cat-politica text-craca-dark; }
+
+  /* ------------------------------------
+     Category Section Heading (left border accent)
+     ------------------------------------ */
+  .cat-heading {
+    @apply font-squidboy-bold text-3xl md:text-4xl uppercase tracking-wider pl-4 mb-8;
+    border-left: 6px solid currentColor;
+  }
+
+  .cat-heading--documentarios { @apply text-cat-documentarios; border-left-color: #ff6625; }
+  .cat-heading--cidade        { @apply text-cat-cidade; border-left-color: #ff76ce; }
+  .cat-heading--entretenimento{ @apply text-cat-entretenimento; border-left-color: #f3fad5; }
+  .cat-heading--esportes      { @apply text-cat-esportes; border-left-color: #00b4d8; }
+  .cat-heading--denuncia      { @apply text-cat-denuncia; border-left-color: #ef233c; }
+  .cat-heading--coisas        { @apply text-cat-coisas; border-left-color: #b185db; }
+  .cat-heading--politica      { @apply text-cat-politica; border-left-color: #80ed99; }
+
+  /* ------------------------------------
+     News Card (default dark theme)
+     ------------------------------------ */
+  .news-card {
+    @apply relative flex flex-col bg-craca-cream rounded-sm overflow-hidden
+           border-2 border-craca-dark shadow-[4px_4px_0_0_#15230d]
+           hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#ff6625] hover:border-craca-orange
+           transition-all duration-300;
+  }
+
+  .news-card__img {
+    @apply block overflow-hidden aspect-video bg-craca-dark border-b-2 border-craca-dark;
+  }
+
+  .news-card__img img {
+    @apply object-cover w-full h-full transition-transform duration-500 group-hover:scale-105 opacity-90 mix-blend-multiply;
+  }
+
+  .news-card__body {
+    @apply flex flex-col flex-grow p-4;
+  }
+
+  .news-card__title {
+    @apply font-anaktoria text-lg md:text-xl leading-tight mb-2
+           text-craca-dark group-hover:text-craca-orange transition-colors duration-300;
+  }
+
+  .news-card__meta {
+    @apply text-xs text-craca-dark/70 mt-auto pt-2;
+  }
+
+  /* ------------------------------------
+     Donate Bar
+     ------------------------------------ */
+  .donate-bar {
+    @apply bg-craca-orange text-craca-dark font-squidboy-bold text-center
+           py-3 px-4 text-sm md:text-base uppercase tracking-wider
+           cursor-pointer hover:bg-craca-pink transition-colors duration-300;
+  }
+
+  /* ------------------------------------
+     Zine-style Stamp / Texture Overlays
+     ------------------------------------ */
+  .texture-overlay {
+    @apply pointer-events-none absolute inset-0 z-10 opacity-20 mix-blend-screen;
+    background-image: url('assets/img/texture-dark-grid.png');
+    background-size: cover;
+  }
+
+  /* ------------------------------------
+     Section Container
+     ------------------------------------ */
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 md:px-6 lg:px-8;
+  }
+
+  /* ------------------------------------
+     CTA Button
+     ------------------------------------ */
+  .btn-cta {
+    @apply inline-block font-squidboy-bold uppercase tracking-wider text-sm
+           px-6 py-3 rounded-sm border-2 border-current
+           hover:bg-craca-orange hover:text-craca-dark hover:border-craca-orange
+           transition-all duration-300;
+  }
+
+  /* ------------------------------------
+     Hero Article
+     ------------------------------------ */
+  .hero-article {
+    @apply relative w-full overflow-hidden rounded-md;
+    min-height: 28rem;
+  }
+
+  @media (min-width: 768px) {
+    .hero-article {
+      min-height: 36rem;
+    }
+  }
+}
+
+/* ========================================
+   UTILITY LAYER — Custom one-off helpers
+   ======================================== */
+
+@layer utilities {
+  .text-shadow-dark {
+    text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}

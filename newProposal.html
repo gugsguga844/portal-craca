@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --c3p-primary: #2B5BFF;
+      --c3p-purple: #4A4A68;
+      --c3p-text-main: #12141D;
+      --c3p-text-muted: #5A6070;
+      --c3p-bg-dark: #25253D;
+      --c3p-accent-yellow: #FFC800;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Montserrat', sans-serif; color: var(--c3p-text-main); background: #f0f0f0; }
+
+    .slide {
+      width: 1280px; 
+      height: 720px; 
+      position: relative; 
+      overflow: hidden; 
+      page-break-after: always;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+    }
+
+    .bg-main { background-image: url('https://3cplusnow.com/wp-content/uploads/2025/06/Login-1.webp'); }
+    .bg-dark { background-color: var(--c3p-bg-dark); flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; }
+
+    .cover-content { padding: 120px; width: 100%; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 2; }
+    .cover-content h1 { font-size: 48px; font-weight: 800; color: var(--c3p-primary); margin-bottom: 16px; }
+    .cover-content h2 { font-size: 32px; font-weight: 500; color: var(--c3p-text-muted); }
+    
+    .cover-decor { position: absolute; top: 80px; right: 120px; display: flex; gap: 16px; }
+    .c3c-brand-icon { width: 40px; height: 40px; }
+    .cover-logo { position: absolute; bottom: 80px; right: 120px; width: 180px; }
+
+    .pricing-slide { justify-content: center; align-items: center; flex-direction: column; padding: 60px; }
+    
+    .cards-container {
+      display: flex; gap: 40px; width: 100%; max-width: 1160px; justify-content: center;
+    }
+
+    .plan-card {
+      display: flex; background: white; border-radius: 32px; box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+      width: 100%; max-width: 900px; overflow: hidden; flex: 1;
+    }
+
+    .plan-details { padding: 40px; flex: 1; display: flex; flex-direction: column; }
+    .plan-title { font-size: 24px; font-weight: 700; text-align: center; margin-bottom: 32px; color: var(--c3p-text-main); border: 1px solid #eee; padding: 12px; border-radius: 16px;}
+    
+    .data-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+    .data-row:last-of-type { border-bottom: none; }
+    .data-pill { background: var(--c3p-primary); color: white; padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; }
+    .data-value { font-weight: 600; color: var(--c3p-text-muted); }
+    
+    .total-box { margin-top: auto; padding-top: 24px; text-align: right; }
+    .total-label { font-size: 14px; color: var(--c3p-text-muted); margin-bottom: 8px; }
+    .total-price { font-size: 36px; font-weight: 800; color: var(--c3p-text-main); }
+    .strikethrough { text-decoration: line-through; opacity: 0.5; font-size: 20px; margin-right: 12px; }
+
+    .plan-features { background: var(--c3p-primary); color: white; padding: 40px; width: 40%; display: flex; flex-direction: column; gap: 16px; justify-content: center; }
+    .plan-features.purple-bg { background: var(--c3p-purple); }
+    .feature-item { display: flex; align-items: center; gap: 12px; font-size: 13px; line-height: 1.4; }
+    .feature-item.missing { opacity: 0.6; }
+
+    .outro-logo { width: 240px; margin-bottom: 40px; }
+    .outro-text { font-size: 28px; font-weight: 500; max-width: 800px; line-height: 1.5; margin-bottom: 60px; }
+    .outro-tks { font-size: 40px; font-weight: 800; color: var(--c3p-accent-yellow); letter-spacing: 2px; }
+
+  </style>
+</head>
+<body>
+
+  <div class="slide bg-main">
+    <div class="cover-decor">
+      <img src="https://3cplusnow.com/wp-content/uploads/2023/07/balao-amarelo-1.svg" class="c3c-brand-icon">
+      <img src="https://3cplusnow.com/wp-content/uploads/2023/07/estrela-rosa.svg" class="c3c-brand-icon">
+      <img src="https://3cplusnow.com/wp-content/uploads/2024/01/balao-azul.svg" class="c3c-brand-icon">
+    </div>
+
+    <div class="cover-content">
+      <h1>Proposta Comercial</h1>
+      <h2>{{ $json.body.cliente_nome }}</h2>
+    </div>
+
+    <img src="https://3cplusnow.com/wp-content/uploads/2024/01/logo-3C.svg" class="cover-logo">
+  </div>
+
+  <div class="slide bg-main pricing-slide">
+
+    <div class="cards-container">
+
+      <div class="plan-card">
+        <div class="plan-details">
+          <div class="plan-title" style="text-transform: capitalize;">Plano {{ $json.body.opcao_1.modalidade }}</div>
+
+          <div class="data-row">
+            <span class="data-pill">Rota de telefonia</span>
+            <span class="data-value">{{ $json.body.opcao_1.rota }}</span>
+          </div>
+
+          <div class="data-row">
+            <span class="data-pill">Quantidade de usuários</span>
+            <span class="data-value">{{ $json.body.opcao_1.usuarios }} usuários</span>
+          </div>
+
+          <div class="data-row" style="display: {{ $json.body.opcao_1.modalidade === 'minutagem' ? 'flex' : 'none' }};">
+            <span class="data-pill">Minutagem mensal</span>
+            <span class="data-value">{{ $json.body.opcao_1.minutos }} min</span>
+          </div>
+
+          <div class="data-row">
+            <span class="data-pill">Licenças fixas</span>
+            <span class="data-value">
+              <del style="opacity: 0.6; margin-right: 8px; display: {{ $json.body.opcao_1.desconto_aplicado ? 'inline-block' : 'none' }};">R$ {{ $json.body.opcao_1.valor_unitario_original }}</del>
+              R$ {{ $json.body.opcao_1.valor_unitario_aplicado }}
+            </span>
+          </div>
+
+          <div class="data-row" style="display: {{ $json.body.opcao_1.omni_ativo ? 'flex' : 'none' }};">
+            <span class="data-pill">Canais e Usuários OMNI</span>
+            <span class="data-value">R$ {{ $json.body.opcao_1.custo_omni }}</span>
+          </div>
+
+          <div class="total-box">
+            <div class="total-label">Investimento total</div>
+            <div class="total-price">R$ {{ $json.body.opcao_1.valor_final }}</div>
+          </div>
+        </div>
+
+        <div class="plan-features {{ $json.body.opcao_1.modalidade === 'minutagem' ? 'purple-bg' : '' }}">
+
+          <div style="display: {{ $json.body.opcao_1.modalidade === 'ilimitado' ? 'block' : 'none' }};">
+            <div class="feature-item">:heavy_check_mark: Telecom (Ilimitado)</div>
+            <div class="feature-item">:heavy_check_mark: Usuários free omni (Ilimitado)</div>
+            <div class="feature-item">:heavy_check_mark: 1 Canal omnichannel</div>
+            <div class="feature-item">:heavy_check_mark: 10 hrs Mentoria (ferramenta)</div>
+            <div class="feature-item">:heavy_check_mark: 5 hrs Mentoria (IA/automação)</div>
+            <div class="feature-item">:heavy_check_mark: 1 ano Acesso RevMakers</div>
+          </div>
+
+          <div style="display: {{ $json.body.opcao_1.modalidade === 'minutagem' ? 'block' : 'none' }};">
+            <div class="feature-item missing">:heavy_multiplication_x: Telecom (cobrado à parte)</div>
+            <div class="feature-item missing">:heavy_multiplication_x: Usuários free omni</div>
+            <div class="feature-item missing">:heavy_multiplication_x: Canal omnichannel</div>
+            <div class="feature-item missing">:heavy_multiplication_x: Mentoria (ferramenta)</div>
+            <div class="feature-item missing">:heavy_multiplication_x: Mentoria (IA/automação)</div>
+            <div class="feature-item missing">:heavy_multiplication_x: Acesso RevMakers</div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="plan-card" style="display: {{ $json.body.cenario_proposta.includes('Comparativo') ? 'flex' : 'none' }};">
+        <div class="plan-details">
+          <div class="plan-title" style="text-transform: capitalize;">Plano {{ $json.body.opcao_2?.modalidade }}</div>
+
+          <div class="data-row">
+            <span class="data-pill">Rota de telefonia</span>
+            <span class="data-value">{{ $json.body.opcao_2?.rota }}</span>
+          </div>
+
+          <div class="data-row">
+            <span class="data-pill">Quantidade de usuários</span>
+            <span class="data-value">{{ $json.body.opcao_2?.usuarios }} usuários</span>
+          </div>
+
+          <div class="data-row" style="display: {{ $json.body.opcao_2?.modalidade === 'minutagem' ? 'flex' : 'none' }};">
+            <span class="data-pill">Minutagem mensal</span>
+            <span class="data-value">{{ $json.body.opcao_2?.minutos }} min</span>
+          </div>
+
+          <div class="data-row">
+            <span class="data-pill">Licenças fixas</span>
+            <span class="data-value">
+              <del style="opacity: 0.6; margin-right: 8px; display: {{ $json.body.opcao_2?.desconto_aplicado ? 'inline-block' : 'none' }};">R$ {{ $json.body.opcao_2?.valor_unitario_original }}</del>
+              R$ {{ $json.body.opcao_2?.valor_unitario_aplicado }}
+            </span>
+          </div>
+
+          <div class="data-row" style="display: {{ $json.body.opcao_2?.omni_ativo ? 'flex' : 'none' }};">
+            <span class="data-pill">Canais e Usuários OMNI</span>
+            <span class="data-value">R$ {{ $json.body.opcao_2?.custo_omni }}</span>
+          </div>
+
+          <div class="total-box">
+            <div class="total-label">Investimento total</div>
+            <div class="total-price">R$ {{ $json.body.opcao_2?.valor_final }}</div>
+          </div>
+        </div>
+
+        <div class="plan-features {{ $json.body.opcao_2?.modalidade === 'minutagem' ? 'purple-bg' : '' }}">
+
+          <div style="display: {{ $json.body.opcao_2?.modalidade === 'ilimitado' ? 'block' : 'none' }};">
+            <div class="feature-item">:heavy_check_mark: Telecom (Ilimitado)</div>
+            <div class="feature-item">:heavy_check_mark: Usuários free omni (Ilimitado)</div>
+            <div class="feature-item">:heavy_check_mark: 1 Canal omnichannel</div>
+            <div class="feature-item">:heavy_check_mark: 10 hrs Mentoria (ferramenta)</div>
+            <div class="feature-item">:heavy_check_mark: 5 hrs Mentoria (IA/automação)</div>
+            <div class="feature-item">:heavy_check_mark: 1 ano Acesso RevMakers</div>
+          </div>
+
+          <div style="display: {{ $json.body.opcao_2?.modalidade === 'minutagem' ? 'block' : 'none' }};">
+            <div class="feature-item missing">:heavy_multiplication_x: Telecom (cobrado à parte)</div>
+            <div class="feature-item missing">:heavy_multiplication_x: Usuários free omni</div>
+            <div class="feature-item missing">:heavy_multiplication_x: Canal omnichannel</div>
+            <div class="feature-item missing">:heavy_multiplication_x: Mentoria (ferramenta)</div>
+            <div class="feature-item missing">:heavy_multiplication_x: Mentoria (IA/automação)</div>
+            <div class="feature-item missing">:heavy_multiplication_x: Acesso RevMakers</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="slide bg-dark">
+    <img src="https://3cplusnow.com/wp-content/uploads/2024/01/logo-3C.svg" class="outro-logo">
+    <div class="outro-text">Uma ferramenta completa para você vender, atender, cobrar e otimizar o seu tempo e o seu dinheiro.</div>
+    <div class="outro-tks">OBRIGADO!</div>
+  </div>
+
+</body>
+</html>

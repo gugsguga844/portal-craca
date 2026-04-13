@@ -1,0 +1,954 @@
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+<style>
+  /* --- DESIGN SYSTEM 3C PLUS (VARIÁVEIS) --- */
+  :root {
+    --c3p-primary: #2B5BFF;
+    --c3p-primary-hover: #1A40CC;
+    --c3p-text-main: #12141D;
+    --c3p-text-muted: #5A6070;
+    --c3p-border: rgba(18, 20, 29, 0.1); 
+    --c3p-accent-yellow: #FFC800;
+    --c3p-font: 'Montserrat', sans-serif;
+  }
+
+  /* --- CONTAINER PRINCIPAL --- */
+  .c3p-calc-section {
+    font-family: var(--c3p-font); display: flex; justify-content: center; flex-direction: column; gap: 32px;
+    align-items: center; position: relative; overflow: hidden; box-sizing: border-box;
+  }
+
+  /* --- ESTRUTURA DA CALCULADORA --- */
+  .c3p-calc-wrapper {
+    position: relative; z-index: 1; max-width: 1000px; width: 100%;
+    background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); 
+    -webkit-backdrop-filter: blur(20px); border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(18, 20, 29, 0.05), 0 1px 3px rgba(18, 20, 29, 0.05);
+    display: grid; grid-template-columns: 1fr 380px; border: 1px solid var(--c3p-border); 
+    transition: max-width 0.4s ease, grid-template-columns 0.4s ease;
+  }
+
+  /* EXPANSÃO PARA COMPARAÇÃO */
+  .c3p-calc-wrapper.c3p-comparing {
+    max-width: 1300px; /* Aumentado para acomodar os painéis duplos */
+    grid-template-columns: 1fr 340px 340px; 
+  }
+  .c3p-calc-wrapper.c3p-comparing .c3p-calc-result#c3p-col-1 { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+  .c3p-calc-wrapper.c3p-comparing .c3p-result-secondary { border-top-right-radius: 24px; border-bottom-right-radius: 24px; }
+
+  /* --- CONTROLES E BOARDS --- */
+  .c3p-calc-controls { padding: 48px; }
+  .c3p-calc-title { font-size: 24px; font-weight: 700; color: var(--c3p-text-main); margin: 0 0 8px 0; line-height: 1.2; }
+  .c3p-calc-subtitle { font-size: 15px; color: var(--c3p-text-muted); margin: 0 0 24px 0; }
+
+  /* Layout Lado a Lado dos Controles */
+  .c3p-boards-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    transition: all 0.3s ease;
+  }
+  .c3p-boards-container.c3p-side-by-side {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .c3p-board {
+    background: rgba(248, 249, 251, 0.4);
+    border: 1px solid var(--c3p-border);
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    animation: c3p-fade-in 0.4s ease;
+  }
+  .c3p-board-title {
+    font-size: 13px; font-weight: 700; color: var(--c3p-primary);
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 20px;
+  }
+  .c3p-board-title.secondary { color: var(--c3p-text-muted); }
+
+  .c3p-field-group { margin-bottom: 20px; }
+  @keyframes c3p-fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .c3p-label { display: block; font-size: 13px; font-weight: 600; color: var(--c3p-text-main); margin-bottom: 8px; }
+
+  /* Tabs e Master Toggle */
+  .c3p-tabs { display: flex; background: rgba(248, 249, 251, 0.5); border-radius: 12px; padding: 6px; gap: 6px; margin-bottom: 16px;}
+  .c3p-tab { flex: 1; padding: 12px 0; border: none; background: transparent; border-radius: 8px; font-family: var(--c3p-font); font-size: 13px; font-weight: 600; color: var(--c3p-text-muted); cursor: pointer; transition: all 0.3s ease; }
+  .c3p-tab:hover { background: rgba(248, 249, 251, 0.5); color: var(--c3p-text-main); }
+  .c3p-tab.active { background: #ffffff; color: var(--c3p-primary); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+
+  .c3p-master-toggle-box {
+    background: #f0f4ff; border: 1px dashed #a3bcf5; border-radius: 12px; padding: 16px; margin-bottom: 24px;
+  }
+
+  /* Inputs, Selects e Checkboxes */
+  .c3p-select, .c3p-input { width: 100%; padding: 14px; border: 1px solid var(--c3p-border); border-radius: 12px; font-family: var(--c3p-font); font-size: 14px; color: var(--c3p-text-main); background-color: #fff; outline: none; transition: border-color 0.3s ease, box-shadow 0.3s ease; appearance: none; }
+  .c3p-select { background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%235A6070%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 16px top 50%; background-size: 12px auto; padding-right: 40px; }
+  .c3p-select:focus, .c3p-input:focus { border-color: var(--c3p-primary); box-shadow: 0 0 0 4px rgba(43, 91, 255, 0.1); }
+
+  .c3p-checkbox-wrapper { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--c3p-text-main); }
+  .c3p-checkbox-wrapper input { width: 18px; height: 18px; accent-color: var(--c3p-primary); cursor: pointer; }
+
+  .c3p-row { display: flex; gap: 12px; }
+  .c3p-col { flex: 1; }
+
+  /* Steppers */
+  .c3p-number-stepper { display: flex; align-items: center; border: 1px solid var(--c3p-border); border-radius: 12px; overflow: hidden; }
+  .c3p-stepper-btn { background: rgba(248, 249, 251, 0.5); border: none; width: 44px; height: 48px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--c3p-text-muted); cursor: pointer; transition: background 0.2s ease; }
+  .c3p-stepper-btn:hover { background: rgba(18, 20, 29, 0.1); color: var(--c3p-text-main); }
+  .c3p-number-stepper input { flex: 1; border: none; text-align: center; font-size: 15px; font-weight: 600; color: var(--c3p-text-main); outline: none; -moz-appearance: textfield; }
+
+  .c3p-hidden { display: none !important; }
+
+  /* --- COLUNAS DE RESULTADO --- */
+  .c3p-calc-result { background: var(--c3p-primary); padding: 48px 32px; color: white; display: flex; flex-direction: column; justify-content: flex-start; position: relative; border-top-right-radius: 24px; border-bottom-right-radius: 24px; transition: all 0.3s ease; }
+  .c3p-result-secondary { background: #ffffff; color: var(--c3p-text-main); border-left: 1px solid var(--c3p-border); }
+  .c3p-result-secondary .c3p-result-label { color: var(--c3p-text-muted); }
+  .c3p-result-secondary .c3p-price-display { color: var(--c3p-primary); }
+  .c3p-result-secondary .c3p-price-period { color: var(--c3p-text-muted); }
+  .c3p-result-secondary .c3p-breakdown { background: rgba(248, 249, 251, 1); }
+  .c3p-result-secondary .c3p-breakdown-item strong { color: var(--c3p-text-main); }
+  .c3p-result-secondary .c3p-btn-action { background: var(--c3p-primary); color: white; }
+
+  .c3p-result-decor { position: absolute; top: 32px; right: 32px; display: flex; gap: 12px; align-items: center; }
+  .c3p-brand-icon { width: 22px; height: 22px; object-fit: contain; flex-shrink: 0; }
+  .c3p-result-label { font-size: 14px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; opacity: 0.9; margin-bottom: 8px; }
+
+  /* Badge de Economia */
+  .c3p-savings-badge { display: inline-block; background: #10B981; color: white; padding: 6px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px; animation: c3p-fade-in 0.3s ease; }
+
+  .c3p-price-display { 
+    display: flex; /* NOVO: Garante que preço original e final fiquem na mesma linha */
+    align-items: center; /* NOVO: Alinha verticalmente os dois blocos de preço pelo centro */
+    flex-wrap: nowrap; /* NOVO: Impede que a linha quebre sob qualquer circunstância */
+    gap: 4px; /* NOVO: Adiciona um espacinho entre o preço original riscado e o final */
+    font-size: 52px; font-weight: 800; line-height: 1; margin-bottom: 8px; letter-spacing: -2px; 
+  }
+  .c3p-price-display span { font-size: 20px; font-weight: 500; letter-spacing: 0; display: inline; }
+  .c3p-price-display > span:first-of-type {
+    vertical-align: super; /* Empurra o R$ principal para cima */
+  }
+  .c3p-price-period { font-size: 14px; opacity: 0.8; margin-bottom: 24px; }
+
+  .c3p-breakdown { background: rgba(0,0,0,0.25); border-radius: 12px; padding: 24px 20px; margin-bottom: 32px; }
+  .c3p-breakdown-item { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; font-size: 14px; margin-bottom: 12px; opacity: 0.9; }
+  .c3p-breakdown-item:last-child { margin-bottom: 0; }
+  .c3p-breakdown-item strong { font-weight: 600; color: var(--c3p-accent-yellow); font-size: 16px; }
+
+  /* Elementos de Desconto */
+  .c3p-edit-btn { cursor: pointer; font-size: 16px !important; vertical-align: middle; margin-left: 6px; opacity: 0.7; transition: opacity 0.2s, color 0.2s; }
+  .c3p-edit-btn:hover { opacity: 1; color: var(--c3p-accent-yellow); }
+  .c3p-result-secondary .c3p-edit-btn:hover { color: var(--c3p-primary); }
+  .c3p-original-price { text-decoration: line-through; opacity: 0.6; font-size: 0.85em; margin-right: 6px; color: #ffffff; font-weight: 400; vertical-align: middle; }
+  .c3p-result-secondary .c3p-original-price { color: var(--c3p-text-muted); }
+
+  /* Lista de Vantagens */
+  .c3p-divider { border: none; border-top: 1px dashed rgba(255, 255, 255, 0.2); margin: 20px 0 !important; }
+  .c3p-result-secondary .c3p-divider { border-top: 1px dashed rgba(18, 20, 29, 0.1); }
+  .c3p-features-list { display: flex; flex-direction: column; gap: 12px; }
+  .c3p-feature-item { display: flex; align-items: center; gap: 12px; font-size: 13px; line-height: 1.4; opacity: 0.95; }
+  .c3p-feature-item strong { font-weight: 700; color: #ffffff; }
+  .c3p-result-secondary .c3p-feature-item.c3p-missing { opacity: 0.6; }
+  .c3p-result-secondary .c3p-feature-item strong { color: var(--c3p-text-main); }
+
+  /* Botões e Modal (Mantidos os originais) */
+  .c3p-btn-action { background: white; color: var(--c3p-primary); border: none; width: 100%; padding: 16px 24px; border-radius: 12px; font-family: var(--c3p-font); font-size: 15px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 12px; transition: transform 0.3s ease, box-shadow 0.3s ease; margin-top: auto; }
+  .c3p-btn-action:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); background: #f0f0f0; color: var(--c3p-primary); }
+  .c3p-result-secondary .c3p-btn-action { background: var(--c3p-primary); color: white; }
+  .c3p-result-secondary .c3p-btn-action:hover { background: var(--c3p-primary-hover); color: white; }
+
+  /* Modal omitido para brevidade no CSS, usamos as classes antigas perfeitamente */
+  .c3p-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(18, 20, 29, 0.6); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 9999; opacity: 1; transition: opacity 0.3s ease; }
+  .c3p-modal-overlay.c3p-hidden { opacity: 0; pointer-events: none; }
+  .c3p-modal { background: white; padding: 32px; border-radius: 24px; max-width: 400px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.15); transform: translateY(0); font-family: var(--c3p-font); }
+  .c3p-modal-overlay.c3p-hidden .c3p-modal { transform: translateY(20px); }
+  .c3p-modal-title { font-size: 20px; font-weight: 700; margin: 0 0 8px 0; }
+  .c3p-modal-text { font-size: 14px; color: var(--c3p-text-muted); margin: 0 0 24px 0; }
+  .c3p-modal .c3p-input { margin-bottom: 24px; }
+  .c3p-modal-actions { display: flex; justify-content: flex-end; gap: 12px; }
+  .c3p-btn-cancel { background: transparent; border: none; font-family: var(--c3p-font); font-size: 14px; font-weight: 600; color: var(--c3p-text-muted); cursor: pointer; padding: 12px 16px; border-radius: 12px; }
+  .c3p-btn-cancel:hover { background: rgba(18, 20, 29, 0.05); color: var(--c3p-text-main); }
+  
+  .c3p-proposal-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Sobrescrevendo o estilo base do botão para dar mais destaque */
+  .c3p-proposal-wrapper .c3p-btn-action {
+    max-width: 350px;
+    background: var(--c3p-primary);
+    color: white;
+    font-size: 16px;
+    padding: 18px 32px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(43, 91, 255, 0.25);
+  }
+
+  .c3p-proposal-wrapper .c3p-btn-action:hover {
+    background: var(--c3p-primary-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(43, 91, 255, 0.4);
+    color: white;
+  }
+
+  @media (max-width: 900px) {
+    .c3p-calc-wrapper, .c3p-calc-wrapper.c3p-comparing { grid-template-columns: 1fr; border-radius: 24px; }
+    .c3p-calc-controls { padding: 32px 24px; }
+    .c3p-boards-container.c3p-side-by-side { grid-template-columns: 1fr; } /* Empilha no mobile */
+    .c3p-calc-result { padding: 40px 24px; border-radius: 0 !important; } 
+    .c3p-result-secondary { border-left: none; border-top: 1px solid var(--c3p-border); border-bottom-right-radius: 24px !important; border-bottom-left-radius: 24px !important;}
+  }
+</style>
+
+<section class="c3p-calc-section">
+  <div class="c3p-calc-wrapper" id="calc-wrapper">
+    
+    <div class="c3p-calc-controls">
+      <h2 class="c3p-calc-title">Simule seu plano</h2>
+      <p class="c3p-calc-subtitle">Descubra o investimento ideal para a sua operação comercial.</p>
+
+      <div class="c3p-tabs" id="c3p-modality-tabs">
+        <button class="c3p-tab active" data-mod="ilimitado">Ilimitado</button>
+        <button class="c3p-tab" data-mod="minutagem">Minutagem</button>
+        <button class="c3p-tab" data-mod="comparar">Comparar</button> 
+      </div>
+
+      <div class="c3p-master-toggle-box" id="c3p-master-toggle-box">
+        <label class="c3p-checkbox-wrapper" style="margin: 0;">
+          <input type="checkbox" id="c3p-master-compare-toggle">
+          Ativar 2ª Opção
+        </label>
+      </div>
+
+      <div class="c3p-boards-container" id="c3p-boards-container">
+        
+        <div class="c3p-board">
+          <div class="c3p-board-title">Configuração Opção 1</div>
+          
+          <div class="c3p-field-group" id="c3p-group-ili-1">
+            <label class="c3p-label">Rota de telefonia</label>
+            <select id="c3p-select-ili-1" class="c3p-select"></select>
+          </div>
+          <div class="c3p-field-group c3p-hidden" id="c3p-group-min-1">
+            <label class="c3p-label">Rota de telefonia</label>
+            <select id="c3p-select-min-1" class="c3p-select"></select>
+          </div>
+
+          <div class="c3p-field-group">
+            <label class="c3p-label">Quantidade de usuários</label>
+            <div class="c3p-number-stepper">
+              <button class="c3p-stepper-btn" onclick="c3pUpdateStepper('c3p-users-val-1', -1, 'card1')">-</button>
+                <input type="number" id="c3p-users-val-1" value="1" min="1" oninput="calculate()">
+              <button class="c3p-stepper-btn" onclick="c3pUpdateStepper('c3p-users-val-1', 1, 'card1')">+</button>
+            </div>
+          </div>
+
+          <div class="c3p-field-group c3p-hidden" id="c3p-minutes-container-1">
+            <label class="c3p-label">Minutagem mensal estimada</label>
+            <input type="number" id="c3p-minutes-val-1" class="c3p-input" value="1000" min="0" step="100" oninput="calculate()">
+          </div>
+
+          <div class="c3p-field-group">
+            <label class="c3p-checkbox-wrapper">
+              <input type="checkbox" id="c3p-omni-toggle-1" onchange="calculate()"> Incluir OmniChannel
+            </label>
+            
+            <div id="c3p-omni-fields-1" class="c3p-hidden" style="margin-top: 16px;">
+              <div class="c3p-field-group">
+                <label class="c3p-label">Canais OMNI</label>
+                <div class="c3p-number-stepper">
+                  <button class="c3p-stepper-btn" onclick="c3pUpdateStepper('c3p-omni-channels-1', -1, 'card1')">-</button>
+                  <input type="number" id="c3p-omni-channels-1" value="1" min="1" oninput="calculate()">
+                  <button class="c3p-stepper-btn" onclick="c3pUpdateStepper('c3p-omni-channels-1', 1, 'card1')">+</button>
+                </div>
+              </div>
+              <div class="c3p-field-group" style="margin-bottom: 0;">
+                <label class="c3p-label">Usuários OMNI</label>
+                <div class="c3p-number-stepper">
+                  <button class="c3p-stepper-btn" onclick="c3pUpdateStepper('c3p-omni-users-1', -1, 'card1')">-</button>
+                  <input type="number" id="c3p-omni-users-1" value="1" min="1" oninput="calculate()">
+                  <button class="c3p-stepper-btn" onclick="c3pUpdateStepper('c3p-omni-users-1', 1, 'card1')">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="c3p-board c3p-hidden" id="c3p-board-2">
+          <div class="c3p-board-title secondary">Configuração Opção 2</div>
+          
+          <div class="c3p-field-group" id="c3p-group-ili-2">
+            <label class="c3p-label">Rota de telefonia</label>
+            <select id="c3p-select-ili-2" class="c3p-select"></select>
+          </div>
+          <div class="c3p-field-group c3p-hidden" id="c3p-group-min-2">
+            <label class="c3p-label">Rota de telefonia</label>
+            <select id="c3p-select-min-2" class="c3p-select"></select>
+          </div>
+
+          <div class="c3p-field-group">
+            <label class="c3p-label">Quantidade de usuários</label>
+            <div class="c3p-number-stepper">
+              <button class="c3p-stepper-btn" onclick="c3pUpdateStepper('c3p-users-val-2', -1, 'card2')">-</button>
+                <input type="number" id="c3p-users-val-2" value="1" min="1" oninput="calculate()">
+              <button class="c3p-stepper-btn" onclick="c3pUpdateStepper('c3p-users-val-2', 1, 'card2')">+</button>
+            </div>
+          </div>
+
+          <div class="c3p-field-group c3p-hidden" id="c3p-minutes-container-2">
+            <label class="c3p-label">Minutagem mensal estimada</label>
+            <input type="number" id="c3p-minutes-val-2" class="c3p-input" value="1000" min="0" step="100" oninput="calculate()">
+          </div>
+
+          <div class="c3p-field-group">
+            <label class="c3p-checkbox-wrapper">
+              <input type="checkbox" id="c3p-omni-toggle-2" onchange="calculate()"> Incluir OmniChannel
+            </label>
+            
+            <div id="c3p-omni-fields-2" class="c3p-hidden" style="margin-top: 16px;">
+              <div class="c3p-field-group">
+                <label class="c3p-label">Canais OMNI</label>
+                <div class="c3p-number-stepper">
+                  <button class="c3p-stepper-btn" onclick="c3pUpdateStepper('c3p-omni-channels-2', -1, 'card2')">-</button>
+                  <input type="number" id="c3p-omni-channels-2" value="1" min="1" oninput="calculate()">
+                  <button class="c3p-stepper-btn" onclick="c3pUpdateStepper('c3p-omni-channels-2', 1, 'card2')">+</button>
+                </div>
+              </div>
+              <div class="c3p-field-group" style="margin-bottom: 0;">
+                <label class="c3p-label">Usuários OMNI</label>
+                <div class="c3p-number-stepper">
+                  <button class="c3p-stepper-btn" onclick="c3pUpdateStepper('c3p-omni-users-2', -1, 'card2')">-</button>
+                  <input type="number" id="c3p-omni-users-2" value="1" min="1" oninput="calculate()">
+                  <button class="c3p-stepper-btn" onclick="c3pUpdateStepper('c3p-omni-users-2', 1, 'card2')">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="c3p-calc-result" id="c3p-col-1">
+      <div class="c3p-result-decor">
+        <img src="https://3cplusnow.com/wp-content/uploads/2023/07/balao-amarelo-1.svg" class="c3p-brand-icon">
+        <img src="https://3cplusnow.com/wp-content/uploads/2023/07/estrela-rosa.svg" class="c3p-brand-icon">
+      </div>
+      <div class="c3p-result-label" id="c3p-label-1">Investimento Total</div>
+      <div class="c3p-price-display"><span>R$</span> <span id="c3p-price-1">0,00</span></div>
+      <div class="c3p-price-period">Faturado mensalmente</div>
+      <div class="c3p-breakdown" id="c3p-break-1"></div>
+      
+      <div id="c3p-badge-1" style="text-align: center;"></div> 
+    </div>
+
+    <div class="c3p-calc-result c3p-result-secondary c3p-hidden" id="c3p-col-2">
+      <div class="c3p-result-label" id="c3p-label-2">Opção 2</div>
+      <div class="c3p-price-display"><span>R$</span> <span id="c3p-price-2">0,00</span></div>
+      <div class="c3p-price-period">Faturado mensalmente</div>
+      <div class="c3p-breakdown" id="c3p-break-2"></div>
+      
+      <div id="c3p-badge-2" style="text-align: center;"></div>
+    </div>
+
+  </div>
+  
+  <div class="c3p-proposal-wrapper">
+    <button class="c3p-btn-action c3p-trigger-modal">
+      <span class="material-symbols-outlined">description</span>Gerar Proposta
+    </button>
+  </div>
+</section>
+
+<div class="c3p-modal-overlay c3p-hidden" id="c3p-email-modal">
+  <div class="c3p-modal">
+    <h3 class="c3p-modal-title">Enviar Proposta</h3>
+    <p class="c3p-modal-text">Preencha os dados abaixo para gerar e enviar a proposta em PDF.</p>
+    <label class="c3p-label">Nome do cliente / Empresa</label>
+    <input type="text" id="c3p-customer-name" class="c3p-input" placeholder="Ex: Empresa X" required>
+    <label class="c3p-label">E-mail do cliente</label>
+    <input type="email" id="c3p-customer-email" class="c3p-input" placeholder="exemplo@cliente.com" required>
+    <div class="c3p-modal-actions">
+      <button class="c3p-btn-cancel" id="c3p-close-modal">Cancelar</button>
+      <button class="c3p-btn-action" id="c3p-send-proposal" style="margin-top: 0; padding: 12px 24px;">
+        <span class="material-symbols-outlined">send</span> Gerar e Enviar
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="c3p-modal-overlay c3p-hidden" id="c3p-discount-modal">
+  <div class="c3p-modal">
+    <h3 class="c3p-modal-title">Aplicar Desconto Especial</h3>
+    <p class="c3p-modal-text">Valor original da licença: <strong id="c3p-discount-original-price" style="color: var(--c3p-text-main);">R$ 0,00</strong></p>
+    
+    <label class="c3p-label">Novo valor negociado (R$)</label>
+    <input type="text" id="c3p-discount-value" class="c3p-input" placeholder="Ex: 350,00">
+    
+    <div class="c3p-modal-actions">
+      <button class="c3p-btn-cancel" id="c3p-close-discount-modal">Cancelar</button>
+      <button class="c3p-btn-action" id="c3p-save-discount" style="margin-top: 0; padding: 12px 24px;">
+        Aplicar Valor
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --- BANCO DE DADOS ---
+  const dbRotas = {
+    ilimitado: [
+      { name: "Discador Ilimitado 7 canais TDM", price: 418.95 },
+      { name: "Discador Ilimitado SMP 7/1", price: 426.30 },
+      { name: "Discador Ilimitado SMP 10/1", price: 502.95 },
+      { name: "Discador Ilimitado performance 7/1", price: 523.95 },
+      { name: "Discador Ilimitado performance 10/1", price: 576.45 },
+      { name: "Discador Ilimitado Alta performance 7/1", price: 712.95 },
+      { name: "Discador Ilimitado Alta performance 10/1", price: 735.00 },
+      { name: "Discador Ilimitado 15/1 SMP/ITX", price: 819.00 },
+      { name: "Discador Ilimitado 15/1 Alta Performance", price: 966.00 }
+    ],
+    minutagem: [
+      { name: "TDM", price: 0.0460 },
+      { name: "SMP", price: 0.0520 },
+      { name: "ITX", price: 0.0620 },
+      { name: "Alta Performance", price: 0.0660 },
+      { name: "Stir Shaken", price: 0.0811 }
+    ]
+  };
+
+  const TAXA_LICENCA_MINUTAGEM = 189.00;
+  
+  // ESTADO DA APLICAÇÃO
+  let currentModality = 'ilimitado'; 
+  let isComparing = false;
+  let discounts = { card1: null, card2: null }; 
+
+  // ELEMENTOS DOM
+  const wrapper = document.getElementById('calc-wrapper');
+  const tabs = document.querySelectorAll('.c3p-tab'); 
+  
+  const selectIli1 = document.getElementById('c3p-select-ili-1');
+  const selectIli2 = document.getElementById('c3p-select-ili-2');
+  const selectMin1 = document.getElementById('c3p-select-min-1');
+  const selectMin2 = document.getElementById('c3p-select-min-2');
+  
+  const col2 = document.getElementById('c3p-col-2');
+  const badge1 = document.getElementById('c3p-badge-1');
+  const badge2 = document.getElementById('c3p-badge-2');
+
+  // Ícones SVG para os checklists
+  const iconCheck = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px; color: var(--c3p-accent-yellow); flex-shrink: 0;"><path d="M20 6L9 17L4 12"></path></svg>';
+  const iconCross = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px; color: #a0a4ab; flex-shrink: 0;"><path d="M18 6L6 18M6 6L18 18"></path></svg>';
+  const iconEdit = '<span class="material-symbols-outlined c3p-edit-btn" title="Editar / Aplicar Desconto">edit</span>';
+
+  // --- MÉTODOS DE APOIO ---
+  const formatBRL = (value) => value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  function populateRoutes() {
+    selectIli1.innerHTML = ''; selectIli2.innerHTML = '';
+    dbRotas.ilimitado.forEach((r, i) => {
+      let optText = r.name;
+      selectIli1.options.add(new Option(optText, i));
+      selectIli2.options.add(new Option(optText, i));
+    });
+
+    selectMin1.innerHTML = ''; selectMin2.innerHTML = '';
+    dbRotas.minutagem.forEach((r, i) => {
+      let optText = r.name + ' (R$ ' + r.price.toFixed(4).replace('.',',') + '/min)';
+      selectMin1.options.add(new Option(optText, i));
+      selectMin2.options.add(new Option(optText, i));
+    });
+  }
+
+  // Quando mudar usuários/minutos, limpa os DOIS descontos pra evitar erro matemático
+  window.resetAllDiscounts = function() { 
+    discounts = { card1: null, card2: null }; 
+  }
+
+  window.c3pUpdateStepper = function(id, change) {
+    let input = document.getElementById(id);
+    let currentVal = parseInt(input.value) || 1;
+    let newVal = currentVal + change;
+    if (newVal < 1) newVal = 1;
+    input.value = newVal;
+    calculate();
+  };
+
+  // --- LÓGICA DE DESCONTO MANUAL (MODAL) ---
+  let activeDiscountCard = null;
+  let activeBasePrice = 0;
+
+  const discountModal = document.getElementById('c3p-discount-modal');
+  const discountInput = document.getElementById('c3p-discount-value');
+  const discountOriginalLabel = document.getElementById('c3p-discount-original-price');
+
+  window.c3pApplyDiscount = function(cardKey, basePrice) {
+    activeDiscountCard = cardKey;
+    activeBasePrice = basePrice;
+    
+    discountOriginalLabel.textContent = 'R$ ' + formatBRL(basePrice);
+    discountInput.value = ''; 
+    discountModal.classList.remove('c3p-hidden');
+    discountInput.focus();
+  }
+
+  function closeDiscountModal() {
+    discountModal.classList.add('c3p-hidden');
+    activeDiscountCard = null;
+  }
+  document.getElementById('c3p-close-discount-modal').addEventListener('click', closeDiscountModal);
+
+  document.getElementById('c3p-save-discount').addEventListener('click', () => {
+    let valStr = discountInput.value.trim().replace(/\./g, '').replace(',', '.');
+    let val = parseFloat(valStr);
+
+    if (isNaN(val) || val < 0) {
+      alert("Por favor, digite um valor válido.");
+      return;
+    }
+
+    if (val >= activeBasePrice) {
+      discounts[activeDiscountCard] = null;
+    } else {
+      discounts[activeDiscountCard] = val;
+    }
+    
+    closeDiscountModal();
+    calculate(); 
+  });
+
+  // --- LEITURA DOS BOARDS ---
+  function getBoardData(index, forceModality = null) {
+    const sfx = '-' + index;
+    const mod = forceModality || currentModality;
+    const isOmni = document.getElementById('c3p-omni-toggle' + sfx).checked;
+    
+    if(isOmni) {
+      document.getElementById('c3p-omni-fields' + sfx).classList.remove('c3p-hidden');
+    } else {
+      document.getElementById('c3p-omni-fields' + sfx).classList.add('c3p-hidden');
+    }
+
+    return {
+      modality: mod,
+      users: parseInt(document.getElementById('c3p-users-val' + sfx).value) || 1,
+      minutes: parseInt(document.getElementById('c3p-minutes-val' + sfx).value) || 0,
+      isOmni: isOmni,
+      oChan: parseInt(document.getElementById('c3p-omni-channels' + sfx).value) || 1,
+      oUser: parseInt(document.getElementById('c3p-omni-users' + sfx).value) || 1,
+      routeIli: dbRotas.ilimitado[document.getElementById('c3p-select-ili' + sfx).value],
+      routeMin: dbRotas.minutagem[document.getElementById('c3p-select-min' + sfx).value]
+    };
+  }
+
+// --- GERADORES DE HTML ---
+  function generateHTML(data, cardKey) {
+    if (data.modality === 'ilimitado') {
+      let unitBasePrice = data.routeIli.price; 
+      let unitDisplayPrice = discounts[cardKey] !== null ? discounts[cardKey] : unitBasePrice; 
+      
+      let unitPriceHTML = discounts[cardKey] !== null 
+        ? `<strong><del class="c3p-original-price">R$ ${formatBRL(unitBasePrice)}</del> R$ ${formatBRL(unitDisplayPrice)}</strong>` 
+        : `<strong>R$ ${formatBRL(unitBasePrice)}</strong>`;
+      
+      // Cálculo do total base (sem desconto) e total final (com possível desconto)
+      let totalLicenseBaseCost = data.users * unitBasePrice;
+      let totalLicenseCost = data.users * unitDisplayPrice;
+      
+      // HTML para exibir o total também com o risco de desconto
+      let totalPriceHTML = discounts[cardKey] !== null 
+        ? `<strong><del class="c3p-original-price">R$ ${formatBRL(totalLicenseBaseCost)}</del> R$ ${formatBRL(totalLicenseCost)}</strong>` 
+        : `<strong>R$ ${formatBRL(totalLicenseBaseCost)}</strong>`;
+      
+      let omniCost = data.isOmni ? (Math.max(0, data.oChan - 1) * 159) : 0;
+      let total = totalLicenseCost + omniCost;
+      let baseTotal = totalLicenseBaseCost + omniCost;
+
+      let html = `
+        <div class="c3p-breakdown-item">
+          <span style="position: relative; display: inline-flex; align-items: center; justify-content: center;">
+            Valor da licença
+            <span onclick="c3pApplyDiscount('${cardKey}', ${unitBasePrice})" style="position: absolute; left: 100%; top: 50%; transform: translateY(-50%); padding-left: 6px;">${iconEdit}</span>
+          </span>
+          ${unitPriceHTML}
+        </div>
+        <div class="c3p-breakdown-item">
+          <span>Licença + Rota (${data.users}x)</span>
+          ${totalPriceHTML}
+        </div>
+        <div class="c3p-breakdown-item" style="margin-bottom: 0;">
+          <span>Minutos Ilimitados</span>
+          <strong>Incluso</strong>
+        </div>`;
+
+      if (data.isOmni) {
+        html += `<div class="c3p-breakdown-item" style="margin-top: 12px; margin-bottom: 0;"><span>Canais OMNI (${data.oChan}x - 1 Isento)</span><strong>R$ ${formatBRL(omniCost)}</strong></div>`;
+        html += `<div class="c3p-breakdown-item" style="margin-top: 6px; margin-bottom: 0;"><span>Usuários OMNI</span><strong>Ilimitado</strong></div>`;
+      }
+
+      html += `<hr class="c3p-divider">
+        <div class="c3p-features-list">
+          <div class="c3p-feature-item">${iconCheck} <span>Telecom <strong>(Ilimitado)</strong></span></div>
+          <div class="c3p-feature-item">${iconCheck} <span>Usuários free omni <strong>(Ilimitado)</strong></span></div>
+          <div class="c3p-feature-item">${iconCheck} <span><strong>1</strong> Canal omnichannel</span></div>
+          <div class="c3p-feature-item">${iconCheck} <span><strong>10 hrs</strong> Mentoria semanal (ferramenta)</span></div>
+          <div class="c3p-feature-item">${iconCheck} <span><strong>5 hrs</strong> Mentoria semanal (IA e automações)</span></div>
+          <div class="c3p-feature-item">${iconCheck} <span><strong>1 ano</strong> Acesso à plataforma RevMakers</span></div>
+        </div>`;
+      return { html, total, baseTotal };
+    } 
+    else {
+      let unitBasePrice = TAXA_LICENCA_MINUTAGEM; 
+      let unitDisplayPrice = discounts[cardKey] !== null ? discounts[cardKey] : unitBasePrice;
+      
+      let unitPriceHTML = discounts[cardKey] !== null 
+        ? `<strong><del class="c3p-original-price">R$ ${formatBRL(unitBasePrice)}</del> R$ ${formatBRL(unitDisplayPrice)}</strong>` 
+        : `<strong>R$ ${formatBRL(unitBasePrice)}</strong>`;
+
+      // Cálculo do total base (sem desconto) e total final (com possível desconto)
+      let totalLicenseBaseCost = data.users * unitBasePrice;
+      let totalLicenseCost = data.users * unitDisplayPrice;
+      
+      // HTML para exibir o total também com o risco de desconto
+      let totalPriceHTML = discounts[cardKey] !== null 
+        ? `<strong><del class="c3p-original-price">R$ ${formatBRL(totalLicenseBaseCost)}</del> R$ ${formatBRL(totalLicenseCost)}</strong>` 
+        : `<strong>R$ ${formatBRL(totalLicenseBaseCost)}</strong>`;
+      
+      let trafegoCost = data.minutes * data.routeMin.price;
+      let omniCost = data.isOmni ? ((data.oChan * 159) + (data.oUser * 99)) : 0;
+      let total = totalLicenseCost + trafegoCost + omniCost;
+      let baseTotal = totalLicenseBaseCost + trafegoCost + omniCost;
+
+      let html = `
+        <div class="c3p-breakdown-item">
+          <span style="position: relative; display: inline-flex; align-items: center; justify-content: center;">
+            Valor da licença
+            <span onclick="c3pApplyDiscount('${cardKey}', ${unitBasePrice})" style="position: absolute; left: 100%; top: 50%; transform: translateY(-50%); padding-left: 6px;">${iconEdit}</span>
+          </span>
+          ${unitPriceHTML}
+        </div>
+        <div class="c3p-breakdown-item">
+          <span>Total de licenças (${data.users}x)</span>
+          ${totalPriceHTML}
+        </div>
+        <div class="c3p-breakdown-item" style="margin-bottom: 0;">
+          <span>Tráfego estimado</span>
+          <strong>R$ ${formatBRL(trafegoCost)}</strong>
+        </div>`;
+
+      if (data.isOmni) {
+        html += `<div class="c3p-breakdown-item" style="margin-top: 12px; margin-bottom: 0;"><span>Canais OMNI (${data.oChan}x)</span><strong>R$ ${formatBRL(data.oChan * 159)}</strong></div>
+                 <div class="c3p-breakdown-item" style="margin-top: 6px; margin-bottom: 0;"><span>Usuários OMNI (${data.oUser}x)</span><strong>R$ ${formatBRL(data.oUser * 99)}</strong></div>`;
+      }
+
+      html += `<hr class="c3p-divider">
+        <div class="c3p-features-list">
+          <div class="c3p-feature-item c3p-missing">${iconCross} <span>Telecom (cobrado à parte)</span></div>
+          <div class="c3p-feature-item c3p-missing">${iconCross} <span>Usuários free omni</span></div>
+          <div class="c3p-feature-item c3p-missing">${iconCross} <span>Canal omnichannel</span></div>
+          <div class="c3p-feature-item c3p-missing">${iconCross} <span>Mentoria semanal (ferramenta)</span></div>
+          <div class="c3p-feature-item c3p-missing">${iconCross} <span>Mentoria semanal (IA e automações)</span></div>
+          <div class="c3p-feature-item c3p-missing">${iconCross} <span>Acesso à plataforma RevMakers</span></div>
+        </div>`;
+      return { html, total, baseTotal };
+    }
+  }
+
+  // --- ENGINE VISUAL E CÁLCULO ---
+  function updateUI() {
+    const bContainer = document.getElementById('c3p-boards-container');
+    const board2 = document.getElementById('c3p-board-2');
+    const toggleBox = document.getElementById('c3p-master-toggle-box');
+    const masterToggle = document.getElementById('c3p-master-compare-toggle');
+    const labelIli1 = document.querySelector('#c3p-group-ili-1 .c3p-label');
+    const labelMin1 = document.querySelector('#c3p-group-min-1 .c3p-label');
+    const boardTitle1 = document.querySelector('#c3p-boards-container .c3p-board-title');
+
+    // Reseta Visibilidades
+    document.getElementById('c3p-group-ili-1').classList.add('c3p-hidden');
+    document.getElementById('c3p-group-min-1').classList.add('c3p-hidden');
+    document.getElementById('c3p-minutes-container-1').classList.add('c3p-hidden');
+    document.getElementById('c3p-group-ili-2').classList.add('c3p-hidden');
+    document.getElementById('c3p-group-min-2').classList.add('c3p-hidden');
+    document.getElementById('c3p-minutes-container-2').classList.add('c3p-hidden');
+
+    if (currentModality === 'comparar') {
+      // MODO: ILIMITADO VS MINUTAGEM (Apenas 1 Board de Controle)
+      isComparing = true;
+      toggleBox.classList.add('c3p-hidden'); 
+      bContainer.classList.remove('c3p-side-by-side');
+      board2.classList.add('c3p-hidden');
+      wrapper.classList.add('c3p-comparing');
+      col2.classList.remove('c3p-hidden');
+      
+      document.getElementById('c3p-group-ili-1').classList.remove('c3p-hidden'); 
+      document.getElementById('c3p-group-min-1').classList.remove('c3p-hidden'); 
+      document.getElementById('c3p-minutes-container-1').classList.remove('c3p-hidden');
+      
+      labelIli1.textContent = "Rota (Ilimitado)";
+      labelMin1.textContent = "Rota (Minutagem)";
+      boardTitle1.textContent = "Configuração da Simulação";
+      
+    } else {
+      // MODO: NORMAL (Podendo comparar internamente)
+      toggleBox.classList.remove('c3p-hidden');
+      isComparing = masterToggle.checked;
+      
+      labelIli1.textContent = "Rota de telefonia";
+      labelMin1.textContent = "Rota de telefonia";
+      boardTitle1.textContent = "Configuração Opção 1";
+      
+      const grpClass = currentModality === 'ilimitado' ? 'c3p-group-ili' : 'c3p-group-min';
+      document.getElementById(`${grpClass}-1`).classList.remove('c3p-hidden');
+      if(currentModality === 'minutagem') document.getElementById('c3p-minutes-container-1').classList.remove('c3p-hidden');
+
+      if (isComparing) {
+        bContainer.classList.add('c3p-side-by-side');
+        board2.classList.remove('c3p-hidden');
+        wrapper.classList.add('c3p-comparing');
+        col2.classList.remove('c3p-hidden');
+        
+        document.getElementById(`${grpClass}-2`).classList.remove('c3p-hidden');
+        if(currentModality === 'minutagem') document.getElementById('c3p-minutes-container-2').classList.remove('c3p-hidden');
+      } else {
+        bContainer.classList.remove('c3p-side-by-side');
+        board2.classList.add('c3p-hidden');
+        wrapper.classList.remove('c3p-comparing');
+        col2.classList.add('c3p-hidden');
+      }
+    }
+  }
+
+function calculate() {
+    updateUI();
+    if(badge1) badge1.innerHTML = ''; 
+    if(badge2) badge2.innerHTML = ''; 
+
+    // Função auxiliar para montar o Preço no Cabeçalho
+    const formatTopPrice = (total, baseTotal, idSuffix) => {
+      let mainHtml = `<span>R$</span> <span id="c3p-price-${idSuffix}">${formatBRL(total)}</span>`;
+      if (baseTotal > total) {
+        // Removemos o 'vertical-align: text-bottom;' daqui
+        return `<del class="c3p-original-price" style="font-size: 20px; letter-spacing: 0; font-weight: 500; margin-right: 12px;">R$ ${formatBRL(baseTotal)}</del> ${mainHtml}`;
+      }
+      return mainHtml;
+    };
+
+    if (currentModality === 'comparar') {
+      // MODO ILI VS MIN
+      const data1 = getBoardData(1, 'ilimitado');
+      const res1 = generateHTML(data1, 'card1');
+      document.getElementById('c3p-label-1').textContent = "Opção 1: Ilimitado";
+      document.querySelector('#c3p-col-1 .c3p-price-display').innerHTML = formatTopPrice(res1.total, res1.baseTotal, 1);
+      document.getElementById('c3p-break-1').innerHTML = res1.html;
+
+      const data2 = getBoardData(1, 'minutagem');
+      const res2 = generateHTML(data2, 'card2');
+      document.getElementById('c3p-label-2').textContent = "Opção 2: Minutagem";
+      document.querySelector('#c3p-col-2 .c3p-price-display').innerHTML = formatTopPrice(res2.total, res2.baseTotal, 2);
+      document.getElementById('c3p-break-2').innerHTML = res2.html;
+
+      if (res1.total !== res2.total) {
+        const diff = Math.abs(res1.total - res2.total);
+        const badgeHTML = `<div class="c3p-savings-badge">Economia de R$ ${formatBRL(diff)}/mês</div>`;
+        res1.total < res2.total ? badge1.innerHTML = badgeHTML : badge2.innerHTML = badgeHTML;
+      }
+    } else {
+      // MODO NORMAL
+      const data1 = getBoardData(1, currentModality);
+      const res1 = generateHTML(data1, 'card1');
+      document.getElementById('c3p-label-1').textContent = isComparing ? "Opção 1" : "Investimento Total";
+      document.querySelector('#c3p-col-1 .c3p-price-display').innerHTML = formatTopPrice(res1.total, res1.baseTotal, 1);
+      document.getElementById('c3p-break-1').innerHTML = res1.html;
+
+      if (isComparing) {
+        const data2 = getBoardData(2, currentModality);
+        const res2 = generateHTML(data2, 'card2');
+        document.getElementById('c3p-label-2').textContent = "Opção 2";
+        document.querySelector('#c3p-col-2 .c3p-price-display').innerHTML = formatTopPrice(res2.total, res2.baseTotal, 2);
+        document.getElementById('c3p-break-2').innerHTML = res2.html;
+
+        if (res1.total !== res2.total) {
+          const diff = Math.abs(res1.total - res2.total);
+          const badgeHTML = `<div class="c3p-savings-badge">Economia de R$ ${formatBRL(diff)}/mês</div>`;
+          res1.total < res2.total ? badge1.innerHTML = badgeHTML : badge2.innerHTML = badgeHTML;
+        }
+      }
+    }
+  }
+
+  // --- LISTENERS ---
+  tabs.forEach(tab => {
+    tab.addEventListener('click', (e) => {
+      tabs.forEach(t => t.classList.remove('active'));
+      e.target.classList.add('active');
+      currentModality = e.target.getAttribute('data-mod');
+      resetAllDiscounts();
+      calculate();
+    });
+  });
+
+  document.getElementById('c3p-master-compare-toggle').addEventListener('change', calculate);
+  document.getElementById('c3p-select-ili-1').addEventListener('change', () => { resetAllDiscounts(); calculate(); });
+  document.getElementById('c3p-select-min-1').addEventListener('change', () => { resetAllDiscounts(); calculate(); });
+  document.getElementById('c3p-select-ili-2').addEventListener('change', () => { resetAllDiscounts(); calculate(); });
+  document.getElementById('c3p-select-min-2').addEventListener('change', () => { resetAllDiscounts(); calculate(); });
+  
+  // Limpa o desconto quando escreve manualmente nos inputs
+  document.getElementById('c3p-users-val-1').addEventListener('input', calculate);
+  document.getElementById('c3p-minutes-val-1').addEventListener('input', calculate);
+  document.getElementById('c3p-users-val-2').addEventListener('input', calculate);
+  document.getElementById('c3p-minutes-val-2').addEventListener('input', calculate);
+
+  document.getElementById('c3p-omni-channels-1').addEventListener('input', calculate);
+  document.getElementById('c3p-omni-users-1').addEventListener('input', calculate);
+  document.getElementById('c3p-omni-channels-2').addEventListener('input', calculate);
+  document.getElementById('c3p-omni-users-2').addEventListener('input', calculate);
+
+  populateRoutes();
+  calculate();
+
+  // --- WEBHOOK / N8N LOGIC ---
+  const webhookUrl = 'https://n8n.3c.plus/webhook-test/bf38afb4-5358-4121-a833-e7d22928873c';
+  const modalEmail = document.getElementById('c3p-email-modal');
+  const nameInputModal = document.getElementById('c3p-customer-name');
+  const emailInputModal = document.getElementById('c3p-customer-email');
+  const btnCloseModalEmail = document.getElementById('c3p-close-modal');
+  const btnSendProposal = document.getElementById('c3p-send-proposal');
+
+  document.querySelectorAll('.c3p-trigger-modal').forEach(btn => {
+    btn.addEventListener('click', () => {
+      modalEmail.classList.remove('c3p-hidden');
+      nameInputModal.focus(); 
+    });
+  });
+
+  function closeEmailModal() {
+    modalEmail.classList.add('c3p-hidden');
+    nameInputModal.value = ''; emailInputModal.value = '';
+  }
+  
+  btnCloseModalEmail.addEventListener('click', closeEmailModal);
+  modalEmail.addEventListener('click', (e) => { if (e.target === modalEmail) closeEmailModal(); });
+
+  btnSendProposal.addEventListener('click', async () => {
+    const name = nameInputModal.value.trim();
+    const email = emailInputModal.value.trim();
+    
+    if (!name) return alert('Por favor, informe o nome do cliente.');
+    if (!email || !email.includes('@')) return alert('Por favor, insira um e-mail válido.');
+
+    const originalHTML = btnSendProposal.innerHTML;
+    btnSendProposal.innerHTML = '<span class="material-symbols-outlined">hourglass_empty</span> Gerando PDF...';
+    btnSendProposal.style.pointerEvents = 'none'; btnSendProposal.style.opacity = '0.7';
+
+    // Montando o Payload
+// --- LÓGICA DE IDENTIFICAÇÃO DO CENÁRIO PARA O N8N ---
+    const data1 = currentModality === 'comparar' ? getBoardData(1, 'ilimitado') : getBoardData(1, currentModality);
+    let data2 = null;
+    if (isComparing || currentModality === 'comparar') {
+      data2 = currentModality === 'comparar' ? getBoardData(1, 'minutagem') : getBoardData(2, currentModality);
+    }
+
+    // 1. Descobrir o Tipo Base
+    let tipoBase = "";
+    if (currentModality === 'comparar' || isComparing) {
+      let mod1 = data1.modality === 'ilimitado' ? 'Ili' : 'Min';
+      let mod2 = data2.modality === 'ilimitado' ? 'Ili' : 'Min';
+      tipoBase = `Comparativo_${mod1}_${mod2}`;
+    } else {
+      tipoBase = data1.modality === 'ilimitado' ? 'Ilimitado' : 'Minutagem';
+    }
+
+    // 2. Verificar se há Omni ou Desconto na simulação como um todo
+    let temOmni = data1.isOmni || (data2 && data2.isOmni);
+    let temDesconto = discounts.card1 !== null || (data2 && discounts.card2 !== null);
+
+    // 3. Montar a Chave Final do Cenário
+    let cenario_id = tipoBase;
+    if (temOmni) cenario_id += "_Omni";
+    if (temDesconto) cenario_id += "_Desconto";
+
+    // --- FUNÇÃO AUXILIAR PARA EXTRAIR VALORES QUEBRADOS PRO PDF ---
+    const buildOptionPayload = (data, cardKey) => {
+      let unitBasePrice = data.modality === 'ilimitado' ? data.routeIli.price : TAXA_LICENCA_MINUTAGEM;
+      let unitDisplayPrice = discounts[cardKey] !== null ? discounts[cardKey] : unitBasePrice;
+      let omniCost = 0;
+      if (data.isOmni) {
+        omniCost = data.modality === 'ilimitado' ? (Math.max(0, data.oChan - 1) * 159) : ((data.oChan * 159) + (data.oUser * 99));
+      }
+      
+      return {
+        modalidade: data.modality,
+        rota: data.modality === 'ilimitado' ? data.routeIli.name : data.routeMin.name,
+        usuarios: data.users,
+        minutos: data.minutes,
+        omni_ativo: data.isOmni,
+        omni_canais: data.oChan,
+        omni_usuarios: data.oUser,
+        custo_omni: omniCost,
+        valor_unitario_original: unitBasePrice,
+        valor_unitario_aplicado: unitDisplayPrice,
+        desconto_aplicado: discounts[cardKey] !== null,
+        valor_final: cardKey === 'card1' 
+          ? parseFloat(document.getElementById('c3p-price-1').innerText.replace(/\./g,'').replace(',','.'))
+          : parseFloat(document.getElementById('c3p-price-2').innerText.replace(/\./g,'').replace(',','.'))
+      };
+    };
+
+    // --- MONTANDO O PAYLOAD FINAL ---
+    const payload = {
+      cliente_nome: name,
+      cliente_email: email,
+      cenario_proposta: cenario_id, // Ex: "Comparativo_Ili_Min_Omni_Desconto"
+      opcao_1: buildOptionPayload(data1, 'card1')
+    };
+
+    if (data2) {
+      payload.opcao_2 = buildOptionPayload(data2, 'card2');
+    }
+
+    console.log("🚀 Payload:", JSON.stringify(payload, null, 2));
+
+    try {
+      const response = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = `Proposta_3CPlus_${name.replace(/\s+/g, '_')}.pdf`;
+        document.body.appendChild(a); a.click(); a.remove(); window.URL.revokeObjectURL(downloadUrl);
+
+        btnSendProposal.innerHTML = '<span class="material-symbols-outlined">check_circle</span> PDF Baixado!';
+        btnSendProposal.style.backgroundColor = '#10B981'; btnSendProposal.style.color = 'white';
+        setTimeout(() => { closeEmailModal(); resetModalButton(originalHTML); }, 2000);
+      } else {
+        throw new Error(`Status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Erro Webhook:", error);
+      btnSendProposal.innerHTML = '<span class="material-symbols-outlined">error</span> Falha no PDF';
+      btnSendProposal.style.backgroundColor = '#EF4444'; btnSendProposal.style.color = 'white';
+      setTimeout(() => resetModalButton(originalHTML), 3000);
+    }
+  });
+
+  function resetModalButton(originalHTML) {
+    btnSendProposal.innerHTML = originalHTML;
+    btnSendProposal.style.pointerEvents = 'auto'; btnSendProposal.style.opacity = '1';
+    btnSendProposal.style.backgroundColor = ''; btnSendProposal.style.color = '';
+  }
+</script>
