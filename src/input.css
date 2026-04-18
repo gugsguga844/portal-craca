@@ -83,64 +83,51 @@ Text Domain: portal-craca
 @layer components {
   /* ------------------------------------
      Category Color Badge
+     Colors applied via inline style from PHP color map
      ------------------------------------ */
   .cat-badge {
     @apply inline-block text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-sm;
   }
 
-  .cat-badge--documentarios { @apply bg-cat-documentarios text-craca-dark; }
-  .cat-badge--cidade         { @apply bg-cat-cidade text-craca-dark; }
-  .cat-badge--entretenimento { @apply bg-cat-entretenimento text-craca-dark; }
-  .cat-badge--esportes       { @apply bg-cat-esportes text-craca-dark; }
-  .cat-badge--denuncia       { @apply bg-cat-denuncia text-white; }
-  .cat-badge--coisas         { @apply bg-cat-coisas text-craca-dark; }
-  .cat-badge--politica       { @apply bg-cat-politica text-craca-dark; }
-
   /* ------------------------------------
      Category Section Heading (left border accent)
+     Colors applied via inline style from PHP color map
      ------------------------------------ */
   .cat-heading {
-    @apply font-squidboy-bold text-3xl md:text-4xl uppercase tracking-wider pl-4 mb-8;
-    border-left: 6px solid currentColor;
+    @apply font-extrabold text-2xl md:text-3xl uppercase tracking-wide pl-4;
+    border-left: 5px solid currentColor;
   }
 
-  .cat-heading--documentarios { @apply text-cat-documentarios; border-left-color: #ff6625; }
-  .cat-heading--cidade        { @apply text-cat-cidade; border-left-color: #ff76ce; }
-  .cat-heading--entretenimento{ @apply text-cat-entretenimento; border-left-color: #f3fad5; }
-  .cat-heading--esportes      { @apply text-cat-esportes; border-left-color: #00b4d8; }
-  .cat-heading--denuncia      { @apply text-cat-denuncia; border-left-color: #ef233c; }
-  .cat-heading--coisas        { @apply text-cat-coisas; border-left-color: #b185db; }
-  .cat-heading--politica      { @apply text-cat-politica; border-left-color: #80ed99; }
-
   /* ------------------------------------
-     News Card (default dark theme)
+     News Card — Traditional / Professional
      ------------------------------------ */
   .news-card {
-    @apply relative flex flex-col bg-craca-cream rounded-sm overflow-hidden
-           border-2 border-craca-dark shadow-[4px_4px_0_0_#15230d]
-           hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#ff6625] hover:border-craca-orange
-           transition-all duration-300;
+    @apply relative flex flex-col overflow-hidden;
   }
 
   .news-card__img {
-    @apply block overflow-hidden aspect-video bg-craca-dark border-b-2 border-craca-dark;
+    @apply block overflow-hidden aspect-video;
   }
 
   .news-card__img img {
-    @apply object-cover w-full h-full transition-transform duration-500 group-hover:scale-105 opacity-90 mix-blend-multiply;
+    @apply object-cover w-full h-full transition-transform duration-500 group-hover:scale-[1.02];
   }
 
   .news-card__body {
-    @apply flex flex-col flex-grow p-4;
+    @apply flex flex-col flex-grow py-4;
   }
 
   .news-card__title {
-    @apply font-anaktoria text-lg md:text-xl leading-tight mb-2
+    @apply font-body text-lg font-bold leading-tight mb-2
            text-craca-dark group-hover:text-craca-orange transition-colors duration-300;
   }
 
+  .news-card__excerpt {
+    @apply text-sm text-craca-dark/60 font-body leading-relaxed mb-3;
+  }
+
   .news-card__meta {
-    @apply text-xs text-craca-dark/70 mt-auto pt-2;
+    @apply text-xs text-craca-dark/50 mt-auto pt-2 font-body;
   }
 
   /* ------------------------------------
@@ -148,7 +135,7 @@ Text Domain: portal-craca
      ------------------------------------ */
   .donate-bar {
     @apply bg-craca-orange text-craca-dark font-squidboy-bold text-center
-           py-3 px-4 text-sm md:text-base uppercase tracking-wider
+           py-1.5 px-4 text-xs md:text-sm uppercase tracking-wider
            cursor-pointer hover:bg-craca-pink transition-colors duration-300;
   }
 
@@ -172,24 +159,10 @@ Text Domain: portal-craca
      CTA Button
      ------------------------------------ */
   .btn-cta {
-    @apply inline-block font-squidboy-bold uppercase tracking-wider text-sm
+    @apply inline-block font-bold uppercase tracking-wider text-sm
            px-6 py-3 rounded-sm border-2 border-current
            hover:bg-craca-orange hover:text-craca-dark hover:border-craca-orange
            transition-all duration-300;
-  }
-
-  /* ------------------------------------
-     Hero Article
-     ------------------------------------ */
-  .hero-article {
-    @apply relative w-full overflow-hidden rounded-md;
-    min-height: 28rem;
-  }
-
-  @media (min-width: 768px) {
-    .hero-article {
-      min-height: 36rem;
-    }
   }
 }
 
